@@ -13,16 +13,32 @@ const LoginPage: Component = () => {
   const [code, setCode] = createSignal('');
   const [error, setError] = createSignal('');
 
+  const friendlyError = (raw: string): string => {
+    if (raw.includes('duplicate key') || raw.includes('unique constraint'))
+      return 'This email is already registered. A sign-in code has been sent.';
+    if (raw.includes('rate') || raw.includes('too many'))
+      return 'Too many attempts. Please wait a minute and try again.';
+    if (raw.includes('Invalid') || raw.includes('expired'))
+      return 'That code is invalid or has expired. Please request a new one.';
+    if (raw.includes('not found'))
+      return 'We couldn\'t find an account with that email. Please check and try again.';
+    return 'Something went wrong. Please try again.';
+  };
+
   const handleSendPin = async () => {
     setError('');
     setStep('sending');
     try {
-      const result = await sendPin(email());
-      if (result.dev_token) setCode(result.dev_token);
+      await sendPin(email());
       setStep('code');
     } catch (e: any) {
-      setError(e.message || 'Failed to send sign-in code');
-      setStep('email');
+      const msg = e.message || '';
+      if (msg.includes('duplicate key')) {
+        setStep('code');
+      } else {
+        setError(friendlyError(msg));
+        setStep('email');
+      }
     }
   };
 
@@ -34,7 +50,7 @@ const LoginPage: Component = () => {
       setStep('success');
       window.location.href = `${APP_URL}?auth_token=${encodeURIComponent(token)}`;
     } catch (e: any) {
-      setError(e.message || 'Invalid or expired code');
+      setError(friendlyError(e.message || ''));
       setStep('code');
     }
   };
