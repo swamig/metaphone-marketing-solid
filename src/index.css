@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --brand-accent: #6366F1;
+  --brand-accent-alt: #3B82F6;
+  --brand-bg: #0A0A0F;
+}
+
+body {
+  background-color: var(--brand-bg);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}

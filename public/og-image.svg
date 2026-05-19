@@ -1,0 +1,19 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A0A0F"/>
+      <stop offset="100%" style="stop-color:#131320"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366F1"/>
+      <stop offset="100%" style="stop-color:#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="600" width="1200" height="30" fill="url(#accent)" opacity="0.15"/>
+  <rect x="60" y="520" width="100" height="4" rx="2" fill="url(#accent)" opacity="0.6"/>
+  <text x="60" y="200" font-family="Inter, -apple-system, sans-serif" font-size="80" font-weight="900" fill="url(#accent)" letter-spacing="-4">METAPHONE</text>
+  <text x="60" y="290" font-family="Inter, -apple-system, sans-serif" font-size="36" fill="white" font-weight="700">Content operations, unified.</text>
+  <text x="60" y="370" font-family="Inter, -apple-system, sans-serif" font-size="20" fill="#9CA3AF">CMS + Social Scheduling + Campaigns + AI Content Generation</text>
+  <text x="60" y="410" font-family="Inter, -apple-system, sans-serif" font-size="20" fill="#9CA3AF">One platform for teams that ship.</text>
+</svg>

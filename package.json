@@ -1,0 +1,23 @@
+{
+  "name": "metaphone-marketing-solid",
+  "version": "1.0.0",
+  "description": "Metaphone Marketing Site",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.16.0",
+    "solid-js": "^1.8.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "terser": "^5.39.0",
+    "typescript": "^5.3.3",
+    "vite": "^6.4.2",
+    "vite-plugin-compression2": "^1.3.3",
+    "vite-plugin-solid": "^2.8.0"
+  }
+}
