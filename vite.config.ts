@@ -12,11 +12,29 @@ export default defineConfig({
   ],
   server: { port: 3000 },
   build: {
-    target: 'esnext',
+    target: 'es2022',
+    modulePreload: { polyfill: false },
+    cssCodeSplit: true,
     minify: 'terser',
     cssMinify: true,
+    terserOptions: {
+      compress: {
+        passes: 2,
+        dead_code: true,
+        drop_console: true,
+        pure_getters: true,
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+      },
       output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
         manualChunks: {
           'solid-vendor': ['solid-js', 'solid-js/web', '@solidjs/router'],
         },
