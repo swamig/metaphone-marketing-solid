@@ -1,200 +1,300 @@
-import { Component, For } from 'solid-js';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
+import { A } from "@solidjs/router";
+import { Component, For } from "solid-js";
+import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 
-const APP_URL = 'https://app.metaphone.app';
+const APP_URL = "https://app.metaphone.app";
+const API = "https://api.metaphone.app";
 
-const features = [
+const pillars = [
   {
-    title: 'Brands',
-    desc: 'Manage brand entities across your entire org. Logos, voice, guidelines — one source of truth.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" /></svg>
-    ),
+    title: "Brand CMS",
+    desc: "Topics, assets, sites, campaigns — publish once under a brand slug.",
+    tag: "Console",
   },
   {
-    title: 'Campaigns',
-    desc: 'Organize content by campaign. Track deliverables, timelines, and cross-channel performance.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-    ),
+    title: "Public content API",
+    desc: "ETag-aware articles list, page payloads, video manifest for SSG pulls.",
+    tag: "Build",
   },
   {
-    title: 'Assets',
-    desc: 'Media files linked to brands. Upload, tag, version, and distribute creative across channels.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-    ),
-  },
-  {
-    title: 'Postings',
-    desc: 'Approval workflows and publishing pipelines. Draft, review, approve, and ship — without the spreadsheet.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-    ),
-  },
-  {
-    title: 'Factory Runs',
-    desc: 'AI-powered content generation pipelines. Define templates, feed data, produce at scale.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-    ),
-  },
-  {
-    title: 'Sites & Pages',
-    desc: 'Full CMS with a block-based editor. Build landing pages, microsites, and documentation.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>
-    ),
-  },
-  {
-    title: 'Blog',
-    desc: 'Publish posts per site with SEO built in. Markdown-native, fast, and beautifully rendered.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
-    ),
-  },
-  {
-    title: 'Social',
-    desc: 'Link social accounts and schedule cross-platform posts. One calendar, every channel.',
-    icon: () => (
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
-    ),
+    title: "SSR artifact cache",
+    desc: "Store prerendered HTML & llms.txt by content_hash. Rebuild only what changed.",
+    tag: "Deploy",
   },
 ];
 
 const steps = [
-  { num: '01', title: 'Define your brand', desc: 'Set up brand identity, voice guidelines, and creative assets in one place.' },
-  { num: '02', title: 'Plan campaigns', desc: 'Create campaigns with deliverables, assign content to channels, and set timelines.' },
-  { num: '03', title: 'Generate & publish', desc: 'Use factory runs to produce content at scale, then push to sites, blogs, and social — all from one dashboard.' },
+  {
+    n: "01",
+    t: "Publish in Console",
+    d: "Editors mark topics published. Brand slug becomes the public namespace.",
+  },
+  {
+    n: "02",
+    t: "Sync at build time",
+    d: "build-content hits the public API with If-None-Match. 304 → reuse local bundle.",
+  },
+  {
+    n: "03",
+    t: "Prerender + cache",
+    d: "Solid renderToString for marketing + blog. PUT HTML to Metaphone SSR when hash misses.",
+  },
+  {
+    n: "04",
+    t: "Combine for agents",
+    d: "postbuild merges site content + Metaphone blog into llms-full.txt, sitemaps, robots.",
+  },
+];
+
+const endpoints = [
+  {
+    method: "GET",
+    path: "/v1/public/brands/{slug}/articles",
+    note: "List posts · ETag / 304",
+  },
+  {
+    method: "GET",
+    path: "/v1/public/brands/{slug}/pages/{page}",
+    note: "Full topic or CMS page",
+  },
+  {
+    method: "GET",
+    path: "/v1/public/brands/{slug}/ssr/{*path}",
+    note: "Cached HTML or text artifact",
+  },
+  {
+    method: "PUT",
+    path: "/v1/public/brands/{slug}/ssr/{*path}",
+    note: "Upload · X-SSR-Token",
+  },
 ];
 
 const HomePage: Component = () => {
   return (
-    <div class="min-h-screen flex flex-col items-center">
+    <div class="min-h-screen flex flex-col bg-[#07070c] text-zinc-100">
       <Nav />
 
-      <main class="w-full flex flex-col items-center">
+      <main class="flex-1">
         {/* Hero */}
-        <section class="w-full max-w-5xl text-center px-6 pt-40 pb-32 space-y-8">
-          <div class="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs text-gray-400 font-medium tracking-wide mb-4">
-            CMS + SOCIAL + CAMPAIGNS + AI CONTENT
-          </div>
-          <h2 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] leading-[0.95]">
-            Content operations,{' '}
-            <span class="bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent">
-              unified.
-            </span>
-          </h2>
-          <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Manage brands, plan campaigns, generate content, publish sites, and schedule social posts — from a single platform built for teams that ship.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <a
-              href={APP_URL}
-              class="bg-gradient-to-r from-[#6366F1] to-[#3B82F6] text-white px-10 py-4 rounded-xl text-lg font-bold hover:opacity-90 transition-opacity inline-block"
-            >
-              Open Console
-            </a>
-            <a
-              href="#features"
-              class="border border-white/15 px-10 py-4 rounded-xl text-lg font-bold hover:bg-white/5 transition-colors inline-block"
-            >
-              See Features
-            </a>
-          </div>
-        </section>
-
-        {/* Features Grid */}
-        <section id="features" class="w-full max-w-7xl px-6 py-32">
-          <div class="text-center mb-20">
-            <h3 class="text-4xl md:text-5xl font-black tracking-tight">
-              Everything you need to{' '}
-              <span class="bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent">ship content</span>
-            </h3>
-            <p class="text-gray-400 mt-4 text-lg max-w-xl mx-auto">
-              Eight modules, one workflow. No more switching between five tools to get a post live.
+        <section class="relative overflow-hidden border-b border-white/5">
+          <div
+            class="pointer-events-none absolute inset-0 opacity-40"
+            style={{
+              background:
+                "radial-gradient(800px 400px at 70% -10%, rgba(99,102,241,.25), transparent 60%), radial-gradient(600px 300px at 10% 80%, rgba(59,130,246,.12), transparent 50%)",
+            }}
+          />
+          <div class="relative mx-auto max-w-6xl px-4 pb-24 pt-32 md:px-6 md:pt-40">
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-indigo-300">
+              CMS · Public API · SSR cache · LLM corpora
+            </div>
+            <h1 class="mt-6 max-w-4xl text-4xl font-black tracking-[-0.04em] leading-[1.05] text-white md:text-6xl lg:text-7xl">
+              Content that{" "}
+              <span class="bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent">
+                ships with your build
+              </span>
+              .
+            </h1>
+            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
+              Metaphone is the brand content plane for marketing sites: publish
+              topics in the console, pull them with an ETag-aware public API,
+              prerender Solid HTML, and cache SSR +{" "}
+              <code class="text-indigo-300">llms-full.txt</code> so rebuilds only
+              pay for what changed.
             </p>
-          </div>
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <For each={features}>
-              {(f) => (
-                <div class="bg-white/[0.03] p-6 rounded-2xl border border-white/[0.06] hover:border-[#6366F1]/30 transition-colors group">
-                  <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6366F1]/20 to-[#3B82F6]/20 flex items-center justify-center text-[#6366F1] mb-4 group-hover:from-[#6366F1]/30 group-hover:to-[#3B82F6]/30 transition-colors">
-                    {f.icon()}
-                  </div>
-                  <h4 class="text-lg font-bold mb-2">{f.title}</h4>
-                  <p class="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
-                </div>
-              )}
-            </For>
-          </div>
-        </section>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href={APP_URL}
+                class="rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 px-6 py-3 text-sm font-bold text-white hover:opacity-90"
+              >
+                Open Console
+              </a>
+              <A
+                href="/docs"
+                class="rounded-xl border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-bold text-white hover:bg-white/[0.06]"
+              >
+                Read the docs
+              </A>
+              <A
+                href="/docs/api-public"
+                class="rounded-xl border border-transparent px-6 py-3 text-sm font-semibold text-zinc-400 hover:text-white"
+              >
+                API reference →
+              </A>
+            </div>
 
-        {/* Workflow */}
-        <section id="workflow" class="w-full max-w-5xl px-6 py-32">
-          <div class="text-center mb-20">
-            <h3 class="text-4xl md:text-5xl font-black tracking-tight">
-              From idea to published in{' '}
-              <span class="bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent">three steps</span>
-            </h3>
-          </div>
-          <div class="space-y-8">
-            <For each={steps}>
-              {(s) => (
-                <div class="flex gap-8 items-start">
-                  <div class="text-5xl font-black text-white/[0.06] shrink-0 w-20">{s.num}</div>
-                  <div class="border-l border-white/10 pl-8 py-2">
-                    <h4 class="text-2xl font-bold mb-2">{s.title}</h4>
-                    <p class="text-gray-400 text-lg">{s.desc}</p>
-                  </div>
-                </div>
-              )}
-            </For>
-          </div>
-        </section>
-
-        {/* Platform / Tech */}
-        <section id="platform" class="w-full max-w-7xl px-6 py-32">
-          <div class="bg-gradient-to-br from-[#6366F1]/10 to-[#3B82F6]/5 rounded-3xl border border-white/[0.06] p-12 md:p-20 text-center">
-            <h3 class="text-4xl md:text-5xl font-black tracking-tight mb-6">
-              Built for speed and scale
-            </h3>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-12">
-              Rust backend delivering sub-millisecond API responses. Federated authentication through Buttrbase. Real-time content sync across every channel.
-            </p>
-            <div class="grid md:grid-cols-3 gap-8 text-left max-w-4xl mx-auto">
+            {/* Live example strip */}
+            <div class="mt-14 grid gap-3 rounded-2xl border border-white/10 bg-black/40 p-4 font-mono text-[12px] text-zinc-400 md:grid-cols-3">
               <div>
-                <div class="text-3xl font-black bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent mb-2">&lt;1ms</div>
-                <div class="text-sm text-gray-500">API response time</div>
+                <div class="text-[10px] uppercase tracking-wider text-zinc-600">
+                  Brand
+                </div>
+                <div class="mt-1 text-indigo-300">ganvil</div>
               </div>
               <div>
-                <div class="text-3xl font-black bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent mb-2">8</div>
-                <div class="text-sm text-gray-500">Integrated modules</div>
+                <div class="text-[10px] uppercase tracking-wider text-zinc-600">
+                  Public read
+                </div>
+                <a
+                  href={`${API}/v1/public/brands/ganvil/articles?limit=3`}
+                  class="mt-1 block truncate text-indigo-300 hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  …/brands/ganvil/articles
+                </a>
               </div>
               <div>
-                <div class="text-3xl font-black bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent mb-2">1</div>
-                <div class="text-sm text-gray-500">Unified dashboard</div>
+                <div class="text-[10px] uppercase tracking-wider text-zinc-600">
+                  Combined corpus
+                </div>
+                <a
+                  href="https://throughputlinesofcodeperday.com/llms-full.txt"
+                  class="mt-1 block truncate text-indigo-300 hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  tlcpd /llms-full.txt
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section class="w-full max-w-4xl px-6 py-32 text-center">
-          <h3 class="text-4xl md:text-6xl font-black tracking-tight mb-6">
-            Start building with{' '}
-            <span class="bg-gradient-to-r from-[#6366F1] to-[#3B82F6] bg-clip-text text-transparent">Metaphone</span>
-          </h3>
-          <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-            Stop juggling tools. Manage your entire content operation from one place.
+        {/* Pillars */}
+        <section id="features" class="mx-auto max-w-6xl px-4 py-24 md:px-6">
+          <h2 class="text-3xl font-black tracking-tight text-white md:text-4xl">
+            Three surfaces, one brand
+          </h2>
+          <p class="mt-3 max-w-xl text-zinc-400">
+            Editors work in the console. Builds speak HTTP. Edge serves static
+            HTML and machine-readable text.
           </p>
-          <a
-            href={APP_URL}
-            class="bg-gradient-to-r from-[#6366F1] to-[#3B82F6] text-white px-12 py-5 rounded-xl text-xl font-bold hover:opacity-90 transition-opacity inline-block"
-          >
-            Open Console
-          </a>
+          <div class="mt-12 grid gap-4 md:grid-cols-3">
+            <For each={pillars}>
+              {(p) => (
+                <div class="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                  <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-indigo-400">
+                    {p.tag}
+                  </span>
+                  <h3 class="mt-3 text-lg font-bold text-white">{p.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-zinc-400">{p.desc}</p>
+                </div>
+              )}
+            </For>
+          </div>
+        </section>
+
+        {/* Pipeline */}
+        <section id="pipeline" class="border-y border-white/5 bg-white/[0.015]">
+          <div class="mx-auto max-w-6xl px-4 py-24 md:px-6">
+            <h2 class="text-3xl font-black tracking-tight text-white md:text-4xl">
+              The marketing build pipeline
+            </h2>
+            <p class="mt-3 max-w-2xl text-zinc-400">
+              What production sites actually run — not a fictional CMS plugin.
+            </p>
+            <div class="mt-12 space-y-4">
+              <For each={steps}>
+                {(s) => (
+                  <div class="flex gap-4 items-start rounded-2xl border border-white/10 bg-[#0c0c14] p-5 md:gap-6 md:p-6">
+                    <div
+                      class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-indigo-400/40 bg-indigo-500/15 font-mono text-sm font-bold tabular-nums tracking-tight text-indigo-200 md:h-12 md:w-12 md:text-base"
+                      aria-hidden="true"
+                    >
+                      {s.n}
+                    </div>
+                    <div class="min-w-0 pt-0.5">
+                      <h3 class="text-lg font-bold text-white">{s.t}</h3>
+                      <p class="mt-1 text-sm leading-relaxed text-zinc-400">{s.d}</p>
+                    </div>
+                  </div>
+                )}
+              </For>
+            </div>
+            <div class="mt-8">
+              <A
+                href="/docs/architecture"
+                class="text-sm font-semibold text-indigo-300 hover:underline"
+              >
+                Full architecture diagram in docs →
+              </A>
+            </div>
+          </div>
+        </section>
+
+        {/* API teaser */}
+        <section class="mx-auto max-w-6xl px-4 py-24 md:px-6">
+          <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <h2 class="text-3xl font-black tracking-tight text-white md:text-4xl">
+                Public API, built for SSG
+              </h2>
+              <p class="mt-3 max-w-xl text-zinc-400">
+                Conditional GETs, SSR path cache, sitemaps. Auth only for
+                uploads and console.
+              </p>
+            </div>
+            <A
+              href="/docs/api-public"
+              class="shrink-0 text-sm font-semibold text-indigo-300 hover:underline"
+            >
+              Full API docs →
+            </A>
+          </div>
+          <div class="mt-10 overflow-hidden rounded-2xl border border-white/10">
+            <For each={endpoints}>
+              {(e, i) => (
+                <div
+                  class={`flex flex-col gap-1 border-b border-white/5 px-4 py-3 font-mono text-[12px] last:border-0 sm:flex-row sm:items-center sm:gap-4 sm:px-5 ${
+                    i() % 2 === 0 ? "bg-white/[0.02]" : ""
+                  }`}
+                >
+                  <span class="w-12 shrink-0 font-bold text-indigo-400">
+                    {e.method}
+                  </span>
+                  <code class="flex-1 text-zinc-200 break-all">{e.path}</code>
+                  <span class="text-zinc-500">{e.note}</span>
+                </div>
+              )}
+            </For>
+          </div>
+          <pre class="mt-6 overflow-x-auto rounded-2xl border border-white/10 bg-[#0c0c14] p-5 text-[12px] leading-6 text-indigo-100">
+{`# Unchanged content → empty body
+ETAG=$(curl -sSI ${API}/v1/public/brands/ganvil/articles?limit=1000 \\
+  | awk -F': ' 'tolower($1)=="etag"{print $2}' | tr -d '\\r')
+curl -sSI -H "If-None-Match: $ETAG" \\
+  ${API}/v1/public/brands/ganvil/articles?limit=1000 | head -3
+# HTTP/2 304`}
+          </pre>
+        </section>
+
+        {/* CTA */}
+        <section class="border-t border-white/5">
+          <div class="mx-auto max-w-4xl px-4 py-24 text-center md:px-6">
+            <h2 class="text-3xl font-black tracking-tight text-white md:text-5xl">
+              Start with docs, ship with the pipeline
+            </h2>
+            <p class="mx-auto mt-4 max-w-xl text-zinc-400">
+              Tutorials cover connecting a Solid site, blog SSR, hash caches,
+              combined llms.txt, and the public API with live ganvil examples.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+              <A
+                href="/docs/overview"
+                class="rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 px-8 py-3.5 text-sm font-bold text-white hover:opacity-90"
+              >
+                What Metaphone is
+              </A>
+              <A
+                href="/docs/tutorial-connect-site"
+                class="rounded-xl border border-white/15 px-8 py-3.5 text-sm font-bold text-white hover:bg-white/5"
+              >
+                Connect a site
+              </A>
+            </div>
+          </div>
         </section>
       </main>
 
