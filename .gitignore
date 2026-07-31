@@ -4,5 +4,4 @@ dist
 .env.local
 
 # Metaphone build-time fetch (regenerated each build)
-# Metaphone build-time fetch
 public/metaphone/
