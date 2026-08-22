@@ -5,3 +5,8 @@ dist
 
 # Metaphone build-time fetch (regenerated each build)
 public/metaphone/
+target/
+.DS_Store
+node_modules/
+*.dylib
+*.so
